@@ -41,6 +41,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -117,8 +118,10 @@ def _post(path: str, body: dict[str, Any], token: str | None = None, timeout: in
 
 
 def _login() -> str:
-    if _SESSION.get("token"):
+    # Platform tokens live 15 minutes; renew well before that.
+    if _SESSION.get("token") and time.monotonic() - _SESSION.get("at", 0.0) < 600:
         return _SESSION["token"]
+    _SESSION.clear()
     out = _post("/api/auth/login", {"username": os.environ["ZETARIS_USER"],
                                     "password": os.environ["ZETARIS_PASSWORD"]})
     blob = json.dumps(out)
@@ -126,7 +129,7 @@ def _login() -> str:
     org = re.search(r'"orgId"\s*:\s*(\d+)', blob)
     if not tok or not org:
         raise ValueError("zetaris login returned no token")
-    _SESSION.update(token=tok.group(0), org=org.group(1))
+    _SESSION.update(token=tok.group(0), org=org.group(1), at=time.monotonic())
     return _SESSION["token"]
 
 
@@ -146,7 +149,8 @@ def _lightning(sql: str, limit: int = 5000) -> dict[str, Any]:
         try:
             out = _post("/api/proxy/sql-editor/sqls/run", body, _login())
         except urllib.error.HTTPError as exc:
-            if exc.code in (401, 403) and attempt == 0:
+            # an expired token comes back as a bare 400 "Bad Request", not 401
+            if exc.code in (400, 401, 403) and attempt == 0:
                 _SESSION.clear()
                 continue
             detail = exc.read().decode(errors="replace")[:200]
