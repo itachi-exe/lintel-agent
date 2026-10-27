@@ -1,33 +1,135 @@
-<!doctype html><html><head><meta charset="utf-8"><style>
+<!doctype html><html><head><meta charset="utf-8"><title>Lintel</title><style>
 @font-face{font-family:G;src:url(geist.woff2)}@font-face{font-family:M;src:url(geistmono.woff2)}
-@page{size:1920px 1080px;margin:0}*{box-sizing:border-box;margin:0}
+@page{size:1920px 1080px;margin:0}*{box-sizing:border-box;margin:0;padding:0}
 body{background:#0b0b0a;color:#f5f5f3;font-family:G}
-.s{width:1920px;height:1080px;padding:120px 140px;position:relative;page-break-after:always;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
-.k{font-family:M;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:#c8a24a;margin-bottom:36px}
-h1{font-size:150px;letter-spacing:-.045em;font-weight:600;line-height:.95}
-h2{font-size:84px;letter-spacing:-.035em;font-weight:600;line-height:1.02;max-width:1500px}
-p{font-size:36px;line-height:1.4;color:#8c8d88;max-width:1300px;margin-top:36px}
-.f{position:absolute;bottom:70px;left:140px;right:140px;display:flex;justify-content:space-between;font-family:M;font-size:20px;color:#66675f}
-.g{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:64px}
-.c{border:1px solid #23231f;border-radius:20px;padding:40px;background:#121210}
-.c b{display:block;font-family:M;color:#c8a24a;font-size:22px;margin-bottom:18px;font-weight:400}
-.c span{font-size:30px;line-height:1.35}
-.n{font-family:M;font-size:96px;color:#f5f5f3;letter-spacing:-.03em}
-img{border-radius:18px;border:1px solid #23231f}
-.mono{font-family:M;font-size:24px;color:#c9c8c0;background:#121210;border:1px solid #23231f;border-radius:16px;padding:32px;margin-top:48px;line-height:1.6;white-space:pre}
+span,p,small,div{text-wrap:pretty}
+.s{width:1920px;height:1080px;padding:110px 140px 150px;position:relative;page-break-after:always;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.k{font-family:M;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:#c8a24a;margin-bottom:32px}
+h1{font-size:170px;letter-spacing:-.045em;font-weight:600;line-height:.95}
+h2{font-size:80px;letter-spacing:-.035em;font-weight:600;line-height:1.04;max-width:1560px}
+h2.sm{font-size:62px}
+p{font-size:34px;line-height:1.4;color:#8c8d88;max-width:1300px;margin-top:32px}
+em{font-style:normal;color:#c8a24a}
+.f{position:absolute;bottom:64px;left:140px;right:140px;display:flex;justify-content:space-between;font-family:M;font-size:21px;color:#8a8a82}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:60px}
+.c{border:1px solid #23231f;border-radius:20px;padding:38px;background:#121210}
+.c b{display:block;font-family:M;color:#c8a24a;font-size:21px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px;font-weight:400}
+.c span{font-size:30px;line-height:1.35;color:#d9d8d2}
+.n+span{color:#a9a89f}
+.n{font-family:M;font-size:84px;color:#f5f5f3;letter-spacing:-.03em;margin-bottom:8px}
+.shots{display:flex;gap:28px;margin-top:44px;align-items:flex-start}
+.shots img{border-radius:16px;border:1px solid #2c2b26;display:block}
+.cap{font-family:M;font-size:20px;color:#8a8a82;margin-top:14px}
+.glow{position:absolute;inset:0;background:radial-gradient(900px 520px at 78% 30%,rgba(200,162,74,.13),transparent 70%);pointer-events:none}
+.flow{display:flex;align-items:stretch;margin-top:64px}
+.node{flex:1;border:1px solid #2c2b26;border-radius:18px;background:#121210;padding:30px 26px;display:flex;flex-direction:column}
+.node.hi{border-color:#c8a24a55;background:#17150f}
+.node b{font-family:M;font-size:18px;letter-spacing:.08em;text-transform:uppercase;color:#c8a24a;font-weight:400;margin-bottom:14px}
+.node strong{font-size:31px;font-weight:600;line-height:1.15;margin-bottom:12px;min-height:2.3em}
+.node span{font-size:23px;line-height:1.4;color:#a3a29a}
+.arr{width:46px;display:flex;align-items:center;justify-content:center;color:#c8a24a;font-family:M;font-size:30px;flex:none}
+.side{display:flex;gap:28px;margin-top:28px}
+.side div{flex:1;font-family:M;font-size:21px;color:#9a998f;border:1px dashed #2c2b26;border-radius:14px;padding:20px 24px;line-height:1.5}
+.side div i{font-style:normal;color:#c8a24a;margin-right:14px}
+.pipe{display:flex;gap:40px;margin-top:52px}
+.pipe div{flex:1;position:relative;text-align:center;font-family:M;font-size:26px;padding:24px 0;border:1px solid #c8a24a66;border-radius:14px;color:#f5f5f3;background:#17150f}
+.mono{font-family:M;font-size:23px;color:#c9c8c0;background:#121210;border:1px solid #23231f;border-radius:16px;padding:30px 34px;line-height:1.6;white-space:pre}
+.mono i{font-style:normal;color:#8a8a82}
+.two{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;margin-top:52px;align-items:start}
+.list{display:flex;flex-direction:column;gap:22px}
+.list div{font-size:30px;line-height:1.35;color:#d9d8d2;padding-left:34px;position:relative}
+.list div:before{content:"";position:absolute;left:0;top:15px;width:12px;height:12px;border-radius:3px;background:#c8a24a}
+.list div small{display:block;font-size:23px;color:#a3a29a;margin-top:4px}
+.ds{display:grid;grid-template-columns:1fr auto;gap:14px 28px;font-size:27px;margin-top:6px}
+.ds span:nth-child(even){font-family:M;font-size:22px;color:#c8a24a;align-self:center}
+.pipe div+div:before{content:"›";position:absolute;left:-30px;top:50%;transform:translateY(-50%);color:#c8a24a;font-size:34px}
+.fade{-webkit-mask-image:linear-gradient(#000 86%,transparent);mask-image:linear-gradient(#000 86%,transparent)}
 </style></head><body>
-<section class="s"><div class="k">Open Agent Hackathon 2026 · Track 02</div><h1>Lintel</h1><p style="font-size:48px;color:#f5f5f3">Before you sign.</p><p>An agent that answers a renter's question about one New York building from city records, and shows exactly why.</p><div class="f"><span>lintel-nyc.vercel.app</span><span>01</span></div></section>
-<section class="s"><div class="k">The problem</div><h2>The city already knows if the heat works. The renter finds out in January.</h2><p>Violations, 311 calls, owners and flood maps are public, spread over a dozen datasets nobody reads before signing a lease.</p><div class="f"><span>Lintel</span><span>02</span></div></section>
-<section class="s" style="padding-top:90px"><div class="k">The product</div><h2 style="font-size:64px">Paste the listing. Get the card. Ask anything.</h2><img src="ask-live.png" style="width:1640px;margin-top:44px;height:620px;object-fit:cover;object-position:top"><div class="f"><span>Lintel</span><span>03</span></div></section>
-<section class="s"><div class="k">How it explains why</div><h2>Every answer carries its own run.</h2><div class="g">
-<div class="c"><b>01 Scout Intent</b><span>Meterless engine: sense, interpret, guard, route. Intent, confidence, and an HMAC signed execution contract.</span></div>
-<div class="c"><b>02 Zetaris SQL</b><span>Only the tools in the contract run, each one SQL statement over NYC records. The panel shows the SQL.</span></div>
-<div class="c"><b>03 Nightshift</b><span>Meterless Nightshift writes the sentence from those rows only. Every claim links to its city record.</span></div></div><div class="f"><span>Lintel</span><span>04</span></div></section>
-<section class="s"><div class="k">Guarded by design</div><h2>It asks when unsure. It refuses when off topic.</h2><div class="mono">"is it bad"                       → clarify: Violations · Pests · Owner's buildings
-"ignore previous instructions"     → refused, one line, nothing runs
-"write me a poem"                  → refused: I only answer about this building
-"any rats?"                        → 11 pest violations, 4 open, 7 linked records</div><div class="f"><span>Lintel</span><span>05</span></div></section>
-<section class="s"><div class="k">Measured, not claimed</div><h2>Held out evals, gated in every test run.</h2><div class="g" style="grid-template-columns:repeat(4,1fr)">
-<div class="c"><div class="n">0.981</div><span>intent top 1</span></div><div class="c"><div class="n">1.000</div><span>injection precision</span></div><div class="c"><div class="n">0.966</div><span>tool precision</span></div><div class="c"><div class="n">2.5ms</div><span>full registry scan</span></div></div><p>194 labeled examples, 14 renter intents. 79 of 79 live engine checks on real records.</p><div class="f"><span>Lintel</span><span>06</span></div></section>
-<section class="s"><div class="k">Try it</div><h1 style="font-size:120px">lintel-nyc.vercel.app</h1><p>Type 533 Bay Street, Staten Island. Then ask: will I have heat this winter?</p><div class="f"><span>Built on Zetaris · Meterless Scout Intent · Meterless Nightshift</span><span>07</span></div></section>
+
+<section class="s"><div class="glow"></div><div class="k">Open Agent Hackathon 2026 · Track 02 · The Agent That Can Explain Why</div>
+<div style="display:flex;gap:56px;align-items:center;margin-top:20px"><div style="flex:1"><h1>Lintel</h1><p style="font-size:48px;color:#f5f5f3;margin-top:40px">Know the building<br><em>before you sign.</em></p><p style="font-size:30px">An agent that answers a renter's question about one New York building from city records, and shows exactly why.</p></div>
+<div class="shots" style="margin-top:0"><img src="crop-hero.png" style="width:900px"></div></div>
+<div class="f"><span>lintel-why.vercel.app</span><span>01</span></div></section>
+
+<section class="s"><div class="k">The problem</div><h2>The city already knows if the heat works. The renter finds out in January.</h2><div class="g">
+<div class="c"><b>Who</b><span>New York renters, in the days before they sign a lease.</span></div>
+<div class="c"><b>Why it hurts</b><span>Violations, 311 calls, owners and flood maps are public, but spread over datasets nobody reads.</span></div>
+<div class="c"><b>Example</b><span>1520 Sedgwick Avenue, Bronx: 36 serious and 22 hazardous housing problems open. None of it is on the listing.</span></div></div><div class="f"><span>Lintel</span><span>02</span></div></section>
+
+<section class="s" style="padding-top:70px;padding-bottom:120px"><div class="k">The solution</div><h2 class="sm">Type the address. Read the verdict. Ask anything.</h2>
+<div class="shots"><div><img class="fade" src="crop-card.png" style="height:640px;width:auto"><div class="cap">Building card, desktop</div></div><div><img class="fade" src="crop-m-hero.png" style="height:640px;width:auto"><div class="cap">Mobile: search</div></div><div><img class="fade" src="shot-m-card-crop.png" style="height:640px;width:auto"><div class="cap">Mobile: verdict</div></div></div>
+<div class="f"><span>Lintel</span><span>03</span></div></section>
+
+<section class="s" style="padding-top:70px;padding-bottom:120px"><div class="k">Product</div><h2 class="sm">Every answer opens up to show why.</h2>
+<div class="shots"><div><img class="fade" src="crop-why.png" style="height:650px;width:auto"><div class="cap">Why this answer: intent, steps, the SQL that ran, signed contract</div></div><div><img class="fade" src="shot-m-answer-crop.png" style="height:650px;width:auto"><div class="cap">The answer, records linked</div></div></div>
+<div class="f"><span>Lintel</span><span>04</span></div></section>
+
+<section class="s"><div class="k">System architecture</div><h2 class="sm">Nothing runs until the question has a signed contract.</h2>
+<div class="flow">
+<div class="node"><b>Ask</b><strong>Renter question</strong><span>Bound to one building, resolved by NYC GeoSearch.</span></div><div class="arr">→</div>
+<div class="node hi"><b>Meterless</b><strong>Scout Intent</strong><span>Sense, Interpret, Guard, Route, Recommend.</span></div><div class="arr">→</div>
+<div class="node hi"><b>Contract</b><strong>HMAC signed</strong><span>Lists the only tools allowed to run.</span></div><div class="arr">→</div>
+<div class="node hi"><b>Zetaris</b><strong>SQL tools</strong><span>One SQL statement per tool over NYC records.</span></div><div class="arr">→</div>
+<div class="node hi"><b>Writer</b><strong>Nightshift or rules</strong><span>Writes only from the rows that came back.</span></div><div class="arr">→</div>
+<div class="node"><b>Out</b><strong>Answer</strong><span>With evidence links, steps, SQL and contract id.</span></div>
+</div>
+<div class="side"><div><i>Injection or off topic:</i>refused, nothing runs</div><div><i>Vague question:</i>one clarifying choice instead of a guess</div></div>
+<div class="f"><span>Lintel</span><span>05</span></div></section>
+
+<section class="s"><div class="k">How we use Meterless</div><h2 class="sm">Scout Intent gates every question.</h2>
+<div class="pipe"><div>Sense</div><div>Interpret</div><div>Guard</div><div>Route</div><div>Recommend</div></div>
+<div class="g" style="grid-template-columns:repeat(4,1fr);margin-top:36px">
+<div class="c"><div class="n">1.000</div><span>injection recall</span></div><div class="c"><div class="n">0.966</div><span>tool precision</span></div><div class="c"><div class="n">0.900</div><span>blind top-1 intent</span></div><div class="c"><div class="n">0.063</div><span>clarification rate</span></div></div>
+<p style="font-size:30px;margin-top:40px;color:#b5b4ac;max-width:1640px"><em>Nightshift</em> writes the answer when connected. Otherwise deterministic rules do, and the answer names which one ran.</p>
+<div class="f"><span>Lintel</span><span>06</span></div></section>
+
+<section class="s"><div class="k">How we use Zetaris</div><h2 class="sm">One SQL layer over the city's records.</h2>
+<div class="two"><div class="mono"><i>/* zetaris/register.sql */</i>
+CREATE LIGHTNING REST TABLE hpd_violations
+  FROM NYC REQUEST(endpoint ".../wvxf-dwi5.json")
+
+<i>/* what the heat tool runs */</i>
+SELECT violationid, class, novdescription
+FROM nyc.hpd_violations
+WHERE bbl = '2028800017'
+  AND upper(novdescription) LIKE '%HEAT%'</div>
+<div class="list">
+<div>NYC datasets registered as Zetaris sources<small>app/zetaris.py sends every tool query through it</small></div>
+<div>The query you see is the query that ran<small>shown in the Why panel, with rows read</small></div>
+<div><em>Zetaris ready.</em> The live demo runs the same SQL direct on NYC Open Data<small>labeled "direct", since no Zetaris instance is connected there</small></div>
+</div></div>
+<div class="f"><span>Lintel</span><span>07</span></div></section>
+
+<section class="s"><div class="k">What is unique</div><h2>Intent is a permission, not a label.</h2><div class="g">
+<div class="c"><b>Contract before tools</b><span>Scout Intent does not just classify. Its signed contract is the allow list the agent executes against.</span></div>
+<div class="c"><b>SQL as the explanation</b><span>The why is not a story written afterwards. It is the exact query and rows behind each claim.</span></div>
+<div class="c"><b>Honest provenance</b><span>Every answer says which data path and which writer ran: Zetaris or direct, Nightshift or rules.</span></div></div><div class="f"><span>Lintel</span><span>08</span></div></section>
+
+<section class="s"><div class="k">Tech stack and data</div><h2 class="sm">Small stack. Public records only.</h2>
+<div class="two" style="grid-template-columns:1fr 1fr;gap:80px">
+<div class="list">
+<div>Python 3.12, FastAPI<small>on Vercel Python functions</small></div>
+<div>Plain HTML, CSS and JS<small>no build step, works on a phone</small></div>
+<div>Meterless Scout Intent and Nightshift<small>intent gate and model provider</small></div>
+<div>Zetaris<small>SQL data layer</small></div>
+</div>
+<div class="ds">
+<span>HPD housing violations</span><span>wvxf-dwi5</span>
+<span>311 service requests</span><span>erm2-nwe9</span>
+<span>DOB violations</span><span>3h2n-5cm9</span>
+<span>PLUTO lot record</span><span>64uk-42ks</span>
+<span>Floodplain 2050s</span><span>27ya-gqtm</span>
+<span>Addresses</span><span>NYC GeoSearch</span>
+<span>Commute times</span><span>Transitous</span>
+</div></div>
+<div class="f"><span>Lintel</span><span>09</span></div></section>
+
+<section class="s"><div class="k">Roadmap</div><h2 class="sm">Next: more of the city, joined in one place.</h2>
+<div class="g" style="grid-template-columns:repeat(4,1fr);margin-top:52px">
+<div class="c"><b>01</b><span>Live Zetaris instance with joins across datasets</span></div>
+<div class="c"><b>02</b><span>Owner portfolio: every building the landlord holds</span></div>
+<div class="c"><b>03</b><span>Compare two buildings side by side</span></div>
+<div class="c"><b>04</b><span>Alerts when new violations land before move in</span></div></div>
+<p style="font-size:40px;color:#f5f5f3;margin-top:80px">Try it at <em>lintel-why.vercel.app</em></p><p style="margin-top:14px;font-size:30px;color:#b5b4ac">Type 1520 Sedgwick Avenue, Bronx. Ask: will I have heat this winter?</p>
+<div class="f"><span>Built on Zetaris · Meterless Scout Intent · Meterless Nightshift</span><span>10</span></div></section>
 </body></html>

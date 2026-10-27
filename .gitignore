@@ -7,3 +7,4 @@ public/
 lintel-cache/
 .cache/
 .pytest_cache/
+.vercel
