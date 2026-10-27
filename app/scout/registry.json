@@ -1,0 +1,795 @@
+{
+ "registryVersion": 1,
+ "note": "Lintel intent registry for the Meterless Scout Intent engine. 'label' and 'triggers' are implementer additions (UI label, Stage-1 weighted trigger table).",
+ "intents": [
+  {
+   "id": "GENERAL",
+   "category": "general",
+   "label": "General",
+   "description": "Safe fallback when no registered intent clears the Reject band. Never routes to tools.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "*"
+   ],
+   "examples": [
+    "hello",
+    "what can you do?",
+    "hi there",
+    "help",
+    "thanks",
+    "what is this"
+   ],
+   "triggers": {},
+   "version": 1
+  },
+  {
+   "id": "building.violations",
+   "category": "building",
+   "label": "Violations and repairs",
+   "description": "Open and past HPD housing code violations: what is wrong with the building, repairs, hazardous conditions.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "status": {
+      "enum": [
+       "open",
+       "all"
+      ]
+     }
+    }
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.hpd_complaints"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "What violations does this building have?",
+    "Are there any open HPD violations here?",
+    "what's wrong with this place",
+    "Does the landlord actually fix things when they break?",
+    "How many hazardous violations are still open?",
+    "show me the repair problems inspectors found",
+    "Is the building in bad shape?",
+    "any class C violations?"
+   ],
+   "triggers": {
+    "violation": 1.0,
+    "open violation": 1.3,
+    "code violation": 1.2,
+    "hpd": 0.7,
+    "repair": 0.8,
+    "wrong with": 0.9,
+    "problem": 0.6,
+    "issue": 0.5,
+    "inspector": 0.6,
+    "inspection": 0.6,
+    "class c": 1.0,
+    "hazardous": 0.8,
+    "broken": 0.6,
+    "fix": 0.4,
+    "maintenance": 0.8,
+    "condition": 0.5,
+    "bad shape": 0.8,
+    "falling apart": 0.9,
+    "cited": 0.8,
+    "ticket": 0.5,
+    "housing code": 1.0,
+    "unresolved": 0.6,
+    "maintain": 0.8,
+    "well kept": 0.9,
+    "neglect": 0.9
+   },
+   "version": 1
+  },
+  {
+   "id": "building.heat",
+   "category": "building",
+   "label": "Heat and hot water",
+   "description": "Heat and hot water: outages, heat complaints and violations, cold apartments in winter.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.hpd_complaints",
+    "records.sr311"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Will I have heat this winter?",
+    "Has this building had heat complaints?",
+    "does the hot water work reliably",
+    "Do people freeze here in January?",
+    "any problems with the boiler?",
+    "Is the radiator heat ok in this building?",
+    "how often does the heat go out"
+   ],
+   "triggers": {
+    "heat": 1.0,
+    "no heat": 1.3,
+    "hot water": 1.2,
+    "radiator": 1.0,
+    "boiler": 1.0,
+    "cold": 0.6,
+    "freezing": 0.8,
+    "warm": 0.6,
+    "winter": 0.6,
+    "thermostat": 0.8,
+    "heating season": 1.2,
+    "lukewarm": 0.9,
+    "shower": 0.5,
+    "hot": 0.4,
+    "chilly": 0.8,
+    "space heater": 1.0,
+    "december": 0.6,
+    "january": 0.6,
+    "february": 0.6
+   },
+   "version": 1
+  },
+  {
+   "id": "building.pests",
+   "category": "building",
+   "label": "Pests",
+   "description": "Pests and vermin: rats, mice, roaches, bedbugs, infestations and extermination.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.hpd_complaints",
+    "records.sr311"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Are there rats in this building?",
+    "any roach problems?",
+    "has anyone reported bedbugs here",
+    "Is there a mouse problem?",
+    "Does the building have pest violations?",
+    "how bad are the vermin complaints",
+    "Do they bring in an exterminator?"
+   ],
+   "triggers": {
+    "pest": 1.0,
+    "rat": 1.0,
+    "mice": 1.0,
+    "mouse": 1.0,
+    "roach": 1.0,
+    "cockroach": 1.0,
+    "bedbug": 1.0,
+    "bed bug": 1.2,
+    "vermin": 1.0,
+    "rodent": 1.0,
+    "infestation": 1.0,
+    "infested": 1.0,
+    "bug": 0.8,
+    "exterminator": 1.0,
+    "insect": 0.8,
+    "critter": 0.8,
+    "droppings": 0.9,
+    "termite": 1.0
+   },
+   "version": 1
+  },
+  {
+   "id": "building.mold_leaks",
+   "category": "building",
+   "label": "Mold and leaks",
+   "description": "Mold, leaks, water damage, dampness and plumbing problems inside the building.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.hpd_complaints"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Is there mold in this building?",
+    "Have tenants reported leaks?",
+    "any water damage on record?",
+    "does the ceiling leak",
+    "Are there mildew or moisture problems?",
+    "how many mold violations are there",
+    "Any plumbing leak complaints?"
+   ],
+   "triggers": {
+    "mold": 1.0,
+    "mould": 1.0,
+    "leak": 1.0,
+    "leaky": 1.0,
+    "leaking": 1.0,
+    "water damage": 1.3,
+    "damp": 0.8,
+    "moisture": 0.8,
+    "mildew": 1.0,
+    "drip": 0.8,
+    "wet": 0.5,
+    "plumbing": 0.7,
+    "ceiling": 0.5,
+    "water stain": 1.0,
+    "humid": 0.6,
+    "pipe": 0.6,
+    "through the wall": 0.9,
+    "water coming": 1.0
+   },
+   "version": 1
+  },
+  {
+   "id": "building.lead",
+   "category": "building",
+   "label": "Lead paint",
+   "description": "Lead paint hazards, peeling paint, and lead risks for young children.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.pluto"
+   ],
+   "riskClass": "medium",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Is there lead paint in this building?",
+    "any lead violations?",
+    "is it safe for my toddler with lead paint",
+    "Has the building had peeling paint violations?",
+    "I have a baby, should I worry about lead here?",
+    "lead based paint hazards?"
+   ],
+   "triggers": {
+    "lead": 1.0,
+    "lead paint": 1.5,
+    "lead based": 1.4,
+    "peeling paint": 1.2,
+    "paint": 0.6,
+    "peeling": 0.7,
+    "toddler": 0.7,
+    "baby": 0.6,
+    "kid": 0.5,
+    "child": 0.5,
+    "chipping": 0.7,
+    "poison": 0.8
+   },
+   "version": 1
+  },
+  {
+   "id": "building.owner",
+   "category": "building",
+   "label": "Owner",
+   "description": "Who owns the building: owner of record, landlord entity, LLC, management company.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.pluto",
+    "records.hpd_registration"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Who owns this building?",
+    "who is the landlord here",
+    "What LLC owns this place?",
+    "Which management company runs it?",
+    "who is the owner of record",
+    "Who is behind the ownership of this building?",
+    "is it owned by a big company"
+   ],
+   "triggers": {
+    "owner": 1.0,
+    "own": 0.6,
+    "who own": 1.3,
+    "landlord": 0.8,
+    "who is the landlord": 1.4,
+    "management": 0.9,
+    "management company": 1.3,
+    "manager": 0.7,
+    "property manager": 1.2,
+    "llc": 1.0,
+    "managed by": 1.2,
+    "run by": 1.0,
+    "behind": 0.3,
+    "registered": 0.6,
+    "proprietor": 1.0,
+    "who run": 1.2
+   },
+   "version": 1
+  },
+  {
+   "id": "owner.portfolio",
+   "category": "owner",
+   "label": "Owner's other buildings",
+   "description": "The owner's other buildings: what else the landlord owns and how those buildings are kept.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.pluto",
+    "records.portfolio"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "What other buildings does this landlord own?",
+    "how are the owner's other properties?",
+    "Does this owner have a bad track record?",
+    "what else do they own",
+    "How many buildings does the landlord have?",
+    "show me the owner's portfolio",
+    "Is this landlord a slumlord across their buildings?"
+   ],
+   "triggers": {
+    "portfolio": 1.3,
+    "other building": 1.4,
+    "what else": 1.1,
+    "other address": 1.2,
+    "how many building": 1.4,
+    "their other": 1.0,
+    "elsewhere": 0.8,
+    "track record": 1.1,
+    "own other": 1.2,
+    "else they own": 1.3,
+    "else do they own": 1.3,
+    "slumlord": 0.9,
+    "same landlord": 1.0,
+    "same owner": 1.0,
+    "rest of": 0.6,
+    "other place": 1.0,
+    "other property": 1.3,
+    "how many property": 1.4
+   },
+   "version": 1
+  },
+  {
+   "id": "building.complaints",
+   "category": "building",
+   "label": "311 complaints",
+   "description": "311 service requests and complaints about the building in general.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.sr311",
+    "records.hpd_complaints"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "How many 311 complaints does this building have?",
+    "what do tenants complain about here",
+    "Show me recent service requests",
+    "Has anyone called 311 about this address?",
+    "what are the most common complaints",
+    "any complaints in the last year?"
+   ],
+   "triggers": {
+    "complaint": 0.9,
+    "complain": 0.9,
+    "311": 1.2,
+    "service request": 1.3,
+    "called the city": 1.0,
+    "report": 0.4,
+    "grievance": 0.9
+   },
+   "version": 1
+  },
+  {
+   "id": "building.structure",
+   "category": "building",
+   "label": "Structure and DOB",
+   "description": "Department of Buildings records: structural issues, elevators, facade, scaffolding, construction, permits.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.dob"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Are there DOB violations?",
+    "does the elevator work",
+    "Is the building structurally sound?",
+    "is there scaffolding on the facade",
+    "any stop work orders?",
+    "Is there construction going on at this building?",
+    "has the DOB cited the owner for unsafe facade"
+   ],
+   "triggers": {
+    "dob": 1.1,
+    "dob violation": 1.7,
+    "department of building": 1.5,
+    "building department": 1.2,
+    "elevator": 1.0,
+    "facade": 1.0,
+    "scaffold": 1.0,
+    "scaffolding": 1.0,
+    "construction": 0.9,
+    "structural": 1.2,
+    "structure": 0.9,
+    "stop work": 1.3,
+    "permit": 0.8,
+    "crack": 0.8,
+    "foundation": 0.8,
+    "collapse": 1.0,
+    "sidewalk shed": 1.3,
+    "ecb": 1.0,
+    "fire escape": 1.0,
+    "lift": 0.6,
+    "renovation": 0.8,
+    "gas": 0.6,
+    "boiler inspection": 0.8
+   },
+   "version": 1
+  },
+  {
+   "id": "building.facts",
+   "category": "building",
+   "label": "Building facts",
+   "description": "Basic facts from PLUTO: year built, number of units, floors, building class, lot size.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.pluto"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "When was this building built?",
+    "How many units are in the building?",
+    "how many floors does it have",
+    "Is it a prewar building?",
+    "what year was it constructed",
+    "how big is this building",
+    "What's the building class?"
+   ],
+   "triggers": {
+    "year built": 1.5,
+    "built": 0.9,
+    "how old": 1.3,
+    "old": 0.6,
+    "age": 0.7,
+    "unit": 0.6,
+    "how many unit": 1.4,
+    "how many apartment": 1.4,
+    "apartments": 0.5,
+    "floor": 0.8,
+    "how many floor": 1.4,
+    "stories": 0.9,
+    "story": 0.6,
+    "how big": 1.1,
+    "tall": 0.8,
+    "zoning": 0.9,
+    "lot": 0.5,
+    "square feet": 1.0,
+    "pluto": 1.2,
+    "building class": 1.1,
+    "prewar": 1.2,
+    "pre war": 1.2,
+    "walkup": 1.0,
+    "walk up": 1.0,
+    "size": 0.7,
+    "square foot": 1.1,
+    "footage": 1.0
+   },
+   "version": 1
+  },
+  {
+   "id": "area.flood",
+   "category": "area",
+   "label": "Flood risk",
+   "description": "Flood risk: the 2050s floodplain, storm surge, and flooding at this address.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "geo.flood"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Is this building in a flood zone?",
+    "will it flood here",
+    "what's the flood risk by 2050",
+    "Did this area flood during Sandy?",
+    "Is the basement at risk in a hurricane?",
+    "does sea level rise affect this address"
+   ],
+   "triggers": {
+    "flood": 1.0,
+    "flooding": 1.0,
+    "floodplain": 1.3,
+    "flood zone": 1.5,
+    "hurricane": 1.0,
+    "storm": 0.8,
+    "storm surge": 1.4,
+    "sea level": 1.3,
+    "sandy": 1.0,
+    "climate": 0.8,
+    "rain": 0.6,
+    "underwater": 1.0,
+    "waterfront": 0.7
+   },
+   "version": 1
+  },
+  {
+   "id": "area.noise",
+   "category": "area",
+   "label": "Noise nearby",
+   "description": "Noise around the building: nearby 311 noise complaints, loud bars, traffic, quiet at night.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "geo.noise"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Is this block noisy?",
+    "how loud is it at night",
+    "Are there noise complaints nearby?",
+    "is the street quiet enough to sleep",
+    "any loud bars or parties around here?",
+    "How bad is the traffic noise?"
+   ],
+   "triggers": {
+    "noise": 1.0,
+    "noisy": 1.0,
+    "loud": 1.0,
+    "quiet": 1.0,
+    "noise complaint": 1.6,
+    "party": 0.6,
+    "music": 0.7,
+    "bar": 0.5,
+    "nightlife": 0.8,
+    "traffic": 0.5,
+    "sleep": 0.7,
+    "honking": 0.9,
+    "peaceful": 0.8,
+    "siren": 0.8,
+    "barking": 0.8
+   },
+   "version": 1
+  },
+  {
+   "id": "area.commute",
+   "category": "area",
+   "label": "Commute",
+   "description": "Commute by transit from the building to a workplace the renter names.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "workplace": {
+      "type": "string",
+      "minLength": 2
+     }
+    },
+    "required": [
+     "workplace"
+    ]
+   },
+   "capabilities": [
+    "geo.geocode",
+    "geo.commute"
+   ],
+   "riskClass": "low",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "How long is the commute to Union Square?",
+    "how far is it to Midtown by subway",
+    "What's my commute to Downtown Brooklyn?",
+    "how long does it take to get to Penn Station",
+    "What's the travel time to work at Hudson Yards?",
+    "Is the train ride to the Financial District long?"
+   ],
+   "triggers": {
+    "commute": 1.3,
+    "commuting": 1.3,
+    "get to": 0.7,
+    "subway": 1.0,
+    "train": 0.8,
+    "transit": 1.0,
+    "bus": 0.7,
+    "how long to": 1.1,
+    "how far": 0.9,
+    "travel time": 1.3,
+    "to work": 1.0,
+    "to my office": 1.1,
+    "to my job": 1.1,
+    "ride": 0.6,
+    "minutes to": 1.0,
+    "trip to": 0.9,
+    "station": 0.7
+   },
+   "version": 1
+  },
+  {
+   "id": "building.verdict",
+   "category": "building",
+   "label": "Overall verdict",
+   "description": "Overall judgement: should I sign the lease, is it safe, red flags, a summary of the building.",
+   "parameters": {
+    "type": "object",
+    "properties": {}
+   },
+   "capabilities": [
+    "records.hpd_violations",
+    "records.hpd_complaints",
+    "records.sr311",
+    "records.dob",
+    "records.pluto"
+   ],
+   "riskClass": "medium",
+   "surfaces": [
+    "card",
+    "api"
+   ],
+   "roles": [
+    "renter",
+    "operator"
+   ],
+   "examples": [
+    "Should I sign the lease here?",
+    "is this building safe",
+    "Any red flags I should know about?",
+    "Give me the bottom line on this place",
+    "Would you live here?",
+    "is it worth it to rent in this building",
+    "Summarize this building for me"
+   ],
+   "triggers": {
+    "should i sign": 1.6,
+    "sign": 0.8,
+    "lease": 0.7,
+    "safe": 0.6,
+    "worth it": 1.1,
+    "good building": 1.1,
+    "red flag": 1.3,
+    "should i rent": 1.5,
+    "should i move": 1.4,
+    "move in": 0.9,
+    "overall": 1.0,
+    "verdict": 1.3,
+    "recommend": 0.8,
+    "would you live": 1.3,
+    "avoid": 0.9,
+    "deal breaker": 1.2,
+    "decent": 0.8,
+    "good idea": 0.9,
+    "risk": 0.5,
+    "summary": 0.9,
+    "summarize": 0.9,
+    "tell me about": 0.7,
+    "bottom line": 1.2,
+    "pros and cons": 1.2,
+    "take this apartment": 1.3,
+    "good place": 1.0,
+    "okay to live": 1.1,
+    "good choice": 1.2,
+    "reason not to": 1.2,
+    "keep looking": 1.1
+   },
+   "version": 1
+  }
+ ]
+}

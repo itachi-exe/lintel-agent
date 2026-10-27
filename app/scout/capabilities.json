@@ -1,0 +1,115 @@
+{
+ "version": 1,
+ "tools": {
+  "zetaris.sql": {
+   "local": false,
+   "cost": 0,
+   "latency_ms": 1200,
+   "permissions": [],
+   "note": "NYC open records registered as Zetaris sources, queried with SQL"
+  },
+  "socrata.direct": {
+   "local": false,
+   "cost": 0,
+   "latency_ms": 1500,
+   "permissions": [],
+   "note": "NYC Open Data SODA API, direct"
+  },
+  "nyc.geosearch": {
+   "local": false,
+   "cost": 0,
+   "latency_ms": 600,
+   "permissions": []
+  },
+  "transitous.plan": {
+   "local": false,
+   "cost": 0,
+   "latency_ms": 2500,
+   "permissions": []
+  },
+  "osrm.route": {
+   "local": false,
+   "cost": 0,
+   "latency_ms": 1500,
+   "permissions": []
+  }
+ },
+ "capabilities": {
+  "records.hpd_violations": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.hpd_complaints": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.hpd_registration": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.sr311": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.dob": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.pluto": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "records.portfolio": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "geo.flood": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "geo.noise": [
+   "zetaris.sql",
+   "socrata.direct"
+  ],
+  "geo.geocode": [
+   "nyc.geosearch"
+  ],
+  "geo.commute": [
+   "transitous.plan",
+   "osrm.route"
+  ]
+ },
+ "latency_budget_ms": {
+  "card": 5000,
+  "api": 10000
+ },
+ "model_profiles": {
+  "meterless/auto": {
+   "provider": "meterless",
+   "local": false,
+   "data_classes": [
+    "public"
+   ],
+   "capabilities": [
+    "text"
+   ]
+  },
+  "local/template": {
+   "provider": "none",
+   "local": true,
+   "data_classes": [
+    "public",
+    "personal"
+   ],
+   "capabilities": [
+    "text"
+   ]
+  }
+ },
+ "tasks": {
+  "answer.compose": [
+   "meterless/auto",
+   "local/template"
+  ]
+ }
+}
