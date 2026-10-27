@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.vercel/
+public/
+.env
+.env.*
+lintel-cache/
+.cache/
+.pytest_cache/

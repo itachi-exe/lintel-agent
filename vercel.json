@@ -1,0 +1,28 @@
+{
+  "buildCommand": "rm -rf public && mkdir -p public && cp -r web/. public/",
+  "outputDirectory": "public",
+  "functions": {
+    "api/*.py": {
+      "maxDuration": 60,
+      "includeFiles": "app/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/health",
+      "destination": "/api/health"
+    },
+    {
+      "source": "/api/geocode",
+      "destination": "/api/geocode"
+    },
+    {
+      "source": "/api/core",
+      "destination": "/api/core"
+    },
+    {
+      "source": "/api/ask",
+      "destination": "/api/ask"
+    }
+  ]
+}
