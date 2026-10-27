@@ -12,8 +12,26 @@ open records. The same statement runs in one of two places:
 
 The answer always reports which one ran (``via``). Nothing pretends.
 
-Config, all optional:
-    ZETARIS_REST_URL  e.g. https://<cluster>/api/v1.0 (default unset = direct)
+Two ways to reach Zetaris, all config optional:
+
+Platform (the local Docker stack, or any Lightning gateway):
+    ZETARIS_URL       e.g. http://localhost:3000
+    ZETARIS_USER      platform user (email)
+    ZETARIS_PASSWORD  its password
+  Each statement is federated in two steps. The row filter (its WHERE) is pushed
+  down to the city API through a Zetaris REST SESSION TABLE, so Zetaris pulls only
+  this building's records; then the rest of the statement (columns, ORDER BY,
+  LIMIT, count) runs as Spark SQL inside Zetaris over that table. The session
+  table is dropped after.
+
+Relay (how the hosted demo reaches a Zetaris platform that is not on the internet):
+    ZETARIS_RELAY_URL  the relay in zetaris/relay.py, which runs next to the platform
+    ZETARIS_RELAY_KEY  shared key
+  The relay accepts only the agent's statement shape (allow-listed tables, plain
+  columns or count(*), ORDER BY one column) and runs it with the platform channel.
+
+Cloud REST channel:
+    ZETARIS_REST_URL  e.g. https://<cluster>/api/v1.0
     ZETARIS_API_KEY   bearer key
     ZETARIS_ORG_ID    defaults to 1
 """
@@ -24,6 +42,7 @@ import json
 import os
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 import uuid
 from dataclasses import dataclass, field
@@ -60,36 +79,143 @@ class Query:
                 "ok": self.ok, "error": self.error or None}
 
 
+def platform() -> bool:
+    return bool(os.environ.get("ZETARIS_URL") and os.environ.get("ZETARIS_USER")
+                and os.environ.get("ZETARIS_PASSWORD"))
+
+
+def relay() -> bool:
+    return bool(os.environ.get("ZETARIS_RELAY_URL") and os.environ.get("ZETARIS_RELAY_KEY"))
+
+
 def configured() -> bool:
-    return bool(os.environ.get("ZETARIS_REST_URL") and os.environ.get("ZETARIS_API_KEY"))
+    return platform() or relay() or bool(os.environ.get("ZETARIS_REST_URL") and os.environ.get("ZETARIS_API_KEY"))
 
 
 def status() -> dict[str, Any]:
-    return {"configured": configured(), "database": "NYC", "tables": sorted(TABLES)}
+    return {"configured": configured(), "mode": "platform" if platform() else "relay" if relay() else ("rest" if configured() else "direct"),
+            "database": "NYC", "tables": sorted(TABLES)}
 
 
-def _zetaris(sql: str, limit: int) -> list[dict[str, Any]]:
-    base = os.environ["ZETARIS_REST_URL"].rstrip("/")
+# ------------------------------------------------------------ platform channel
+
+_SESSION: dict[str, Any] = {}
+_SPLIT = re.compile(r"^\s*SELECT\s+(?P<cols>.+?)\s+FROM\s+nyc\.(?P<table>\w+)"
+                    r"(?:\s+WHERE\s+(?P<where>.+?))?(?P<tail>\s+ORDER\s+BY\s+.+?)?(?P<limit>\s+LIMIT\s+\d+)?\s*$",
+                    re.I | re.S)
+
+
+def _post(path: str, body: dict[str, Any], token: str | None = None, timeout: int = 90) -> Any:
+    headers = {"Content-Type": "application/json"}
+    if token:
+        headers.update({"Authorization": f"Bearer {token}", "X-Org-ID": str(_SESSION.get("org", "")),
+                        "X-Request-ID": str(uuid.uuid4())})
+    req = urllib.request.Request(os.environ["ZETARIS_URL"].rstrip("/") + path,
+                                 data=json.dumps(body).encode(), method="POST", headers=headers)
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode() or "null")
+
+
+def _login() -> str:
+    if _SESSION.get("token"):
+        return _SESSION["token"]
+    out = _post("/api/auth/login", {"username": os.environ["ZETARIS_USER"],
+                                    "password": os.environ["ZETARIS_PASSWORD"]})
+    blob = json.dumps(out)
+    tok = re.search(r"[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}", blob)
+    org = re.search(r'"orgId"\s*:\s*(\d+)', blob)
+    if not tok or not org:
+        raise ValueError("zetaris login returned no token")
+    _SESSION.update(token=tok.group(0), org=org.group(1))
+    return _SESSION["token"]
+
+
+def _rows(out: Any) -> list[dict[str, Any]]:
+    """Rows from a /sql-editor/sqls/run response: {headers: [...], data: [[...], ...]}."""
+    if not isinstance(out, dict):
+        return []
+    heads = out.get("headers") or []
+    return [dict(zip(heads, r)) for r in out.get("data") or [] if isinstance(r, list)]
+
+
+def _lightning(sql: str, limit: int = 5000) -> dict[str, Any]:
+    """One Lightning SQL statement through the platform; retries once on an expired login."""
+    body = {"queryId": "", "sql": sql, "source": "SqlEditor", "limit": limit}
+    for attempt in (0, 1):
+        body["queryId"] = str(uuid.uuid4())
+        try:
+            out = _post("/api/proxy/sql-editor/sqls/run", body, _login())
+        except urllib.error.HTTPError as exc:
+            if exc.code in (401, 403) and attempt == 0:
+                _SESSION.clear()
+                continue
+            detail = exc.read().decode(errors="replace")[:200]
+            raise ValueError(f"zetaris {exc.code}: {detail}") from exc
+        return out if isinstance(out, dict) else {}
+    return {}
+
+
+_COL = re.compile(r"^[A-Za-z_]\w*$")
+
+
+def _platform(sql: str, table: str, limit: int) -> list[dict[str, Any]]:
+    m = _SPLIT.match(sql)
+    if not m:
+        raise ValueError("statement shape not supported for pushdown")
+    where = (m.group("where") or "").strip()
+    params = {"$where": where, "$limit": "5000"} if where else {"$limit": "5000"}
+    endpoint = SOCRATA.format(ds=DS[TABLES[table]]) + "?" + urllib.parse.urlencode(params)
+    name = f"lintel_{table}_{uuid.uuid4().hex[:10]}"
+    _lightning(
+        f'CREATE REST SESSION TABLE {name} REQUEST (endpoint "{endpoint}", method "GET", '
+        f'http_encoding "URLENCODED", response_type "JSON", insecure_ssl "false") '
+        f'HEADER ("User-Agent" "Lintel github.com/itachi-exe/lintel-agent") BODY ()')
+    try:
+        cols = [c.strip() for c in m.group("cols").split(",")]
+        if all(_COL.match(c) for c in cols):
+            # The schema is inferred from the rows that came back, so a field that is
+            # null on every row is not a column. Ask what exists, select NULL for the rest.
+            have = set(_lightning(f"SELECT * FROM session.{name} LIMIT 1", 1).get("headers") or [])
+            if not have:
+                return []
+            cols = [c if c in have else f"NULL AS {c}" for c in cols]
+            tail = m.group("tail") or ""
+            if tail and not any(re.search(rf"\b{re.escape(h)}\b", tail) for h in have):
+                tail = ""
+        else:
+            tail = m.group("tail") or ""
+        return _rows(_lightning(f"SELECT {', '.join(cols)} FROM session.{name}{tail}{m.group('limit') or ''}",
+                                limit))
+    finally:
+        try:
+            _lightning(f"DROP TABLE session.{name}", 1)
+        except Exception:  # noqa: BLE001 - cleanup only
+            pass
+
+
+_SAFE_COL = re.compile(r"^(?:[A-Za-z_]\w*|count\(\*\)\s+AS\s+n)$", re.I)
+_SAFE_TAIL = re.compile(r"^\s+ORDER\s+BY\s+[A-Za-z_]\w*(?:\s+(?:ASC|DESC))?$", re.I)
+
+
+def safe(sql: str, table: str) -> bool:
+    """The relay's gate: only the shapes the agent itself writes."""
+    m = _SPLIT.match(sql)
+    if not m or m.group("table").lower() != table or table not in TABLES:
+        return False
+    cols = [c.strip() for c in m.group("cols").split(",")]
+    return all(_SAFE_COL.match(c) for c in cols) and (not m.group("tail") or bool(_SAFE_TAIL.match(m.group("tail"))))
+
+
+def _relay(sql: str, table: str, limit: int) -> list[dict[str, Any]]:
     req = urllib.request.Request(
-        base + "/sql-editor/sqls/run",
-        data=json.dumps({"queryId": str(uuid.uuid4()), "sql": sql, "source": "SqlEditor",
-                         "limit": limit}).encode(),
-        method="POST",
-        headers={
-            "Authorization": f"Bearer {os.environ['ZETARIS_API_KEY']}",
-            "X-Org-ID": os.environ.get("ZETARIS_ORG_ID", "1"),
-            "X-Request-ID": str(uuid.uuid4()),
-            "Content-Type": "application/json",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=45) as resp:
-        out = json.loads(resp.read().decode() or "null")
-    data = out.get("data") if isinstance(out, dict) else None
-    # The REST channel returns either a list of objects or {columns, rows}.
-    if isinstance(data, dict) and "columns" in data:
-        cols = [c.get("name") if isinstance(c, dict) else c for c in data["columns"]]
-        return [dict(zip(cols, r)) for r in data.get("rows") or []]
-    return list(data or [])
+        os.environ["ZETARIS_RELAY_URL"].rstrip("/") + "/run",
+        data=json.dumps({"sql": sql, "table": table, "limit": limit}).encode(), method="POST",
+        headers={"Content-Type": "application/json", "X-Relay-Key": os.environ["ZETARIS_RELAY_KEY"]})
+    with urllib.request.urlopen(req, timeout=25) as resp:
+        out = json.loads(resp.read().decode() or "{}")
+    if not out.get("ok"):
+        raise ValueError(str(out.get("error") or "relay refused")[:160])
+    return list(out.get("rows") or [])
 
 
 def _direct(sql: str, table: str) -> list[dict[str, Any]]:
@@ -107,7 +233,13 @@ def run(sql: str, *, limit: int = 200, use_zetaris: bool | None = None) -> Query
     q = Query(sql=sql, table=table)
     if use_zetaris if use_zetaris is not None else configured():
         try:
-            q.rows, q.via = _zetaris(sql, limit), "zetaris"
+            if platform():
+                q.rows = _platform(sql, table, limit)
+            elif relay():
+                q.rows = _relay(sql, table, limit)
+            else:
+                q.rows = _zetaris(sql, limit)
+            q.via = "zetaris"
             return q
         except (urllib.error.URLError, OSError, ValueError, KeyError) as exc:
             q.error = f"zetaris unavailable ({type(exc).__name__}), ran direct"

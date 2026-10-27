@@ -11,7 +11,7 @@ CREATE LIGHTNING REST TABLE hpd_violations FROM NYC REQUEST(
     response_type "json",
     http_encoding "URLENCODED"
 ) HEADER (
-    "User-Agent" "Lintel itachi_r3birth@proton.me"
+    "User-Agent" "Lintel github.com/itachi-exe/lintel-agent"
 ) BODY ();
 
 CREATE LIGHTNING REST TABLE sr311 FROM NYC REQUEST(
@@ -20,7 +20,7 @@ CREATE LIGHTNING REST TABLE sr311 FROM NYC REQUEST(
     response_type "json",
     http_encoding "URLENCODED"
 ) HEADER (
-    "User-Agent" "Lintel itachi_r3birth@proton.me"
+    "User-Agent" "Lintel github.com/itachi-exe/lintel-agent"
 ) BODY ();
 
 CREATE LIGHTNING REST TABLE dob_violations FROM NYC REQUEST(
@@ -29,7 +29,7 @@ CREATE LIGHTNING REST TABLE dob_violations FROM NYC REQUEST(
     response_type "json",
     http_encoding "URLENCODED"
 ) HEADER (
-    "User-Agent" "Lintel itachi_r3birth@proton.me"
+    "User-Agent" "Lintel github.com/itachi-exe/lintel-agent"
 ) BODY ();
 
 CREATE LIGHTNING REST TABLE pluto FROM NYC REQUEST(
@@ -38,7 +38,7 @@ CREATE LIGHTNING REST TABLE pluto FROM NYC REQUEST(
     response_type "json",
     http_encoding "URLENCODED"
 ) HEADER (
-    "User-Agent" "Lintel itachi_r3birth@proton.me"
+    "User-Agent" "Lintel github.com/itachi-exe/lintel-agent"
 ) BODY ();
 
 CREATE LIGHTNING REST TABLE flood_2050 FROM NYC REQUEST(
@@ -47,7 +47,7 @@ CREATE LIGHTNING REST TABLE flood_2050 FROM NYC REQUEST(
     response_type "json",
     http_encoding "URLENCODED"
 ) HEADER (
-    "User-Agent" "Lintel itachi_r3birth@proton.me"
+    "User-Agent" "Lintel github.com/itachi-exe/lintel-agent"
 ) BODY ();
 
 -- Smoke test

@@ -9,8 +9,9 @@ Track: 02, The Agent That Can Explain Why.
 
 ## Required sponsor stack (event rules)
 
-- Zetaris: the data layer. NYC open records are registered as Zetaris sources and the
-  agent's tools run SQL through Zetaris (REST). `app/zetaris.py`.
+- Zetaris: the data layer. The agent's tools run SQL through Zetaris: the WHERE is pushed
+  down to the city API in a REST SESSION TABLE, the rest runs as Spark SQL in Zetaris
+  (`app/zetaris.py`, relay for the hosted demo in `zetaris/relay.py`).
   When no Zetaris instance is configured the same question runs straight against
   Socrata and the answer says so (`data.via = "direct"`). Never pretend.
 - Meterless Scout Intent engine: every question passes Sense, Interpret, Guard, Route,

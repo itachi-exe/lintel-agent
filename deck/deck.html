@@ -84,19 +84,19 @@ em{font-style:normal;color:#c8a24a}
 <div class="f"><span>Lintel</span><span>06</span></div></section>
 
 <section class="s"><div class="k">How we use Zetaris</div><h2 class="sm">One SQL layer over the city's records.</h2>
-<div class="two"><div class="mono"><i>/* zetaris/register.sql */</i>
-CREATE LIGHTNING REST TABLE hpd_violations
-  FROM NYC REQUEST(endpoint ".../wvxf-dwi5.json")
+<div class="two"><div class="mono"><i>/* 1. pushdown: Zetaris pulls only this building */</i>
+CREATE REST SESSION TABLE lintel_hpd REQUEST(
+  endpoint ".../wvxf-dwi5.json?$where=
+    bbl='2028800017' AND ...")
 
-<i>/* what the heat tool runs */</i>
+<i>/* 2. the rest runs as Spark SQL in Zetaris */</i>
 SELECT violationid, class, novdescription
-FROM nyc.hpd_violations
-WHERE bbl = '2028800017'
-  AND upper(novdescription) LIKE '%HEAT%'</div>
+FROM session.lintel_hpd
+ORDER BY inspectiondate DESC</div>
 <div class="list">
-<div>NYC datasets registered as Zetaris sources<small>app/zetaris.py sends every tool query through it</small></div>
-<div>The query you see is the query that ran<small>shown in the Why panel, with rows read</small></div>
-<div><em>Zetaris ready.</em> The live demo runs the same SQL direct on NYC Open Data<small>labeled "direct", since no Zetaris instance is connected there</small></div>
+<div>Every tool query runs through <em>Zetaris</em>, live<small>self-hosted Zetaris 2.4.3, reached by a key-gated relay</small></div>
+<div>Same rows as the city's own API<small>checked row for row on 1520 Sedgwick Ave</small></div>
+<div>Every answer says what ran<small>"Records via Zetaris", or "direct" if Zetaris is ever down</small></div>
 </div></div>
 <div class="f"><span>Lintel</span><span>07</span></div></section>
 
@@ -126,7 +126,7 @@ WHERE bbl = '2028800017'
 
 <section class="s"><div class="k">Roadmap</div><h2 class="sm">Next: more of the city, joined in one place.</h2>
 <div class="g" style="grid-template-columns:repeat(4,1fr);margin-top:52px">
-<div class="c"><b>01</b><span>Live Zetaris instance with joins across datasets</span></div>
+<div class="c"><b>01</b><span>Zetaris joins across datasets in one statement</span></div>
 <div class="c"><b>02</b><span>Owner portfolio: every building the landlord holds</span></div>
 <div class="c"><b>03</b><span>Compare two buildings side by side</span></div>
 <div class="c"><b>04</b><span>Alerts when new violations land before move in</span></div></div>
