@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut">
+<title>Lintel. Know the building before you sign.</title>
+<meta name="description" content="Lintel reads New York public records about a building and tells a renter what they say, then answers questions and shows why.">
+<meta name="theme-color" content="#0b0a08">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 20 20"><circle cx="8.75" cy="8.75" r="5.75" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 20 20"><path d="M10 17.5s5.5-5 5.5-9.25a5.5 5.5 0 10-11 0C4.5 12.5 10 17.5 10 17.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="8.25" r="1.9" fill="currentColor"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 20 20"><path d="M4 10h11M11 5.5L15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-out" viewBox="0 0 16 16"><path d="M6 3.5H3.5v9h9V10M9 3h4v4M13 3L7.5 8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 16 16"><path d="M5 6.5L8 9.5l3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 20 20"><path d="M10 15.5V4.5M5.5 9L10 4.5 14.5 9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-heat" viewBox="0 0 20 20"><path d="M6 15.5c0-3 2-3.5 2-6.5M10 15.5c0-3 2-3.5 2-6.5M14 15.5c0-3 2-3.5 2-6.5M4 4.5h13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-pest" viewBox="0 0 20 20"><ellipse cx="10" cy="11" rx="3.5" ry="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 6.25V15.75M6.5 9L3.5 7.5M6.5 13l-3 1.5M13.5 9l3-1.5M13.5 13l3 1.5M8.5 5L7 3M11.5 5L13 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 20 20"><path d="M2.5 8c2.5-2 5-2 7.5 0s5 2 7.5 0M2.5 13c2.5-2 5-2 7.5 0s5 2 7.5 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-key" viewBox="0 0 20 20"><circle cx="7" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10H17.5M15 10v2.75M17.5 10v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 20 20"><path d="M5 2.75h6.5L15 6.25v11H5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 10h5M7.5 13h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 20 20"><circle cx="5" cy="5" r="1.75" fill="currentColor"/><circle cx="5" cy="10" r="1.75" fill="currentColor"/><circle cx="5" cy="15" r="1.75" fill="currentColor"/><path d="M9 5h7M9 10h7M9 15h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-seal" viewBox="0 0 20 20"><path d="M10 2.5l6 2.5v4.5c0 4-2.75 6.5-6 8-3.25-1.5-6-4-6-8V5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.25 10l2 2 3.5-3.75" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="glow" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="/" aria-label="Lintel home">
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true">
+        <rect x="3" y="5" width="22" height="3.4" rx="1" fill="var(--accent)"/>
+        <rect x="6.5" y="10.4" width="3" height="13" rx="0.8" fill="currentColor"/>
+        <rect x="18.5" y="10.4" width="3" height="13" rx="0.8" fill="currentColor"/>
+      </svg>
+      <span class="word">Lintel</span>
+    </a>
+    <nav class="nav-links" aria-label="Page">
+      <a href="#how">How it works</a>
+      <a href="#why">Why</a>
+      <a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="top">
+    <div class="wrap hero-in">
+      <p class="kicker">For New York renters</p>
+      <h1 class="h1">Know the building<br><em>before you sign.</em></h1>
+      <p class="lede">Type the address. Lintel reads the city's public records and tells you what they say.</p>
+
+      <div class="search" id="search" role="search">
+        <div class="combo" id="combo">
+          <svg class="combo-ic" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="q" type="text" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false"
+                 placeholder="Street address, any borough" aria-label="Building address"
+                 role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="suggest">
+          <button class="combo-clear" id="clear" type="button" aria-label="Clear address" hidden>
+            <svg aria-hidden="true"><use href="#i-x"/></svg>
+          </button>
+        </div>
+        <ul class="suggest" id="suggest" role="listbox" aria-label="Matching addresses" hidden></ul>
+        <p class="search-msg" id="search-msg" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="result wrap" id="result" aria-live="polite" hidden></section>
+
+  <section class="band" id="how">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2 class="h2">Three steps. No account.</h2>
+      <ol class="steps reveal">
+        <li class="step">
+          <span class="step-n">01</span>
+          <h3>Find the building</h3>
+          <p>Start typing the address and pick it from the list.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">02</span>
+          <h3>Read the verdict</h3>
+          <p>Violations, complaints and flood risk from the last three years, each one linked to its record.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">03</span>
+          <h3>Ask what matters to you</h3>
+          <p>Heat, pests, the owner. The agent answers from the records and shows its work.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="why">
+    <div class="wrap why-grid">
+      <div>
+        <p class="kicker">The agent explains why</p>
+        <h2 class="h2">Every answer shows its work.</h2>
+        <p class="body">Before anything runs, your question becomes a signed plan. You can open any answer and see what the agent understood, which records it read, the exact query, and which model wrote the sentence.</p>
+      </div>
+      <ol class="trace reveal" aria-label="What happens to a question">
+        <li><span class="trace-dot"></span><div><b>Understand</b><span>Your words become one intent with a confidence score.</span></div></li>
+        <li><span class="trace-dot"></span><div><b>Guard</b><span>Off topic or unclear? It asks you or says no, plainly.</span></div></li>
+        <li><span class="trace-dot"></span><div><b>Sign</b><span>The plan is sealed as a contract before a single query runs.</span></div></li>
+        <li><span class="trace-dot"></span><div><b>Query</b><span>SQL over city records, shown to you in full.</span></div></li>
+        <li><span class="trace-dot"></span><div><b>Answer</b><span>A short sentence from those rows only, each fact linked.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="sources">
+    <div class="wrap">
+      <p class="kicker">Sources</p>
+      <h2 class="h2">Public records, nothing else.</h2>
+      <ul class="sources reveal">
+        <li><a href="https://data.cityofnewyork.us/d/wvxf-dwi5" target="_blank" rel="noopener"><span><b>HPD violations</b><small>Housing Preservation and Development</small></span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li><a href="https://data.cityofnewyork.us/d/erm2-nwe9" target="_blank" rel="noopener"><span><b>311 service requests</b><small>Complaints called in by residents</small></span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li><a href="https://data.cityofnewyork.us/d/3h2n-5cm9" target="_blank" rel="noopener"><span><b>DOB violations</b><small>Department of Buildings</small></span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li><a href="https://data.cityofnewyork.us/d/64uk-42ks" target="_blank" rel="noopener"><span><b>PLUTO</b><small>Lot facts, year built, owner of record</small></span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li><a href="https://data.cityofnewyork.us/d/27ya-gqtm" target="_blank" rel="noopener"><span><b>Future Floodplain 2050s</b><small>Projected 100 year floodplain</small></span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+      </ul>
+      <p class="fine">All from NYC Open Data. Lintel is not legal advice and records can lag.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="brand brand-sm" href="#top" aria-label="Back to top">
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true">
+        <rect x="3" y="5" width="22" height="3.4" rx="1" fill="var(--accent)"/>
+        <rect x="6.5" y="10.4" width="3" height="13" rx="0.8" fill="currentColor"/>
+        <rect x="18.5" y="10.4" width="3" height="13" rx="0.8" fill="currentColor"/>
+      </svg>
+      <span class="word">Lintel</span>
+    </a>
+    <p>Built for the Open Agent Hackathon 2026. Records from NYC Open Data.</p>
+  </div>
+</footer>
+
+<script src="/static/app.js" defer></script>
+</body>
+</html>
